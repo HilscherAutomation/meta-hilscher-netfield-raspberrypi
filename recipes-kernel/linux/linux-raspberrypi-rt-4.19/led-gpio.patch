@@ -1,0 +1,39 @@
+diff -aurN a/arch/arm/boot/dts/overlays/led-gpio-overlay.dts b/arch/arm/boot/dts/overlays/led-gpio-overlay.dts
+--- a/arch/arm/boot/dts/overlays/led-gpio-overlay.dts	1970-01-01 01:00:00.000000000 +0100
++++ b/arch/arm/boot/dts/overlays/led-gpio-overlay.dts	2019-08-21 16:12:04.116960879 +0200
+@@ -0,0 +1,24 @@
++/dts-v1/;
++/plugin/;
++
++/ {
++	compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
++
++	fragment@0 {
++		target = <&leds>;
++		__overlay__ {
++			user_led_gpio12: user_led_gpio@12 {
++				label = "user0:orange:user";
++				gpios = <&gpio 12 0>;/* active high */
++				linux,default-trigger = "none";
++				status = "okay";
++			};
++			user_led_gpio13: user_led_gpio@13 {
++				label = "user1:orange:user";
++				gpios = <&gpio 13 0>;/* active high */
++				linux,default-trigger = "none";
++				status = "okay";
++			};
++		};
++	};
++};
+diff -aurN a/arch/arm/boot/dts/overlays/Makefile b/arch/arm/boot/dts/overlays/Makefile
+--- a/arch/arm/boot/dts/overlays/Makefile	2019-08-21 16:04:24.603271186 +0200
++++ b/arch/arm/boot/dts/overlays/Makefile	2019-08-21 16:15:28.550667254 +0200
+@@ -83,6 +83,7 @@
+ 	jedec-spi-nor.dtbo \
+ 	justboom-dac.dtbo \
+ 	justboom-digi.dtbo \
++	led-gpio.dtbo \
+ 	ltc294x.dtbo \
+ 	max98357a.dtbo \
+ 	mbed-dac.dtbo \

@@ -1,0 +1,35 @@
+--- a/cmd/pxe_utils.c	2020-07-31 14:23:12.218293950 +0200
++++ b/cmd/pxe_utils.c	2020-07-31 14:31:56.520542357 +0200
+@@ -381,6 +381,12 @@
+ 		strcat(bootm_argv[2], ":");
+ 		strncat(bootm_argv[2], env_get("filesize"), 9);
+ 		bootm_argc = 3;
++	} else {
++		const char* ramdisk_addr = env_get("ramdisk_addr_r");
++		if (ramdisk_addr && strcmp("", ramdisk_addr)) {
++			bootm_argv[2] = ramdisk_addr;
++			bootm_argc = 3;
++		}
+ 	}
+ 
+ 	if (get_relfile_envaddr(cmdtp, label->kernel, "kernel_addr_r") < 0) {
+@@ -410,8 +416,9 @@
+ 		char bootargs[CONFIG_SYS_CBSIZE] = "";
+ 		char finalbootargs[CONFIG_SYS_CBSIZE];
+ 
++		sprintf(bootargs, "%s ", env_get("bootargs"));
+ 		if (strlen(label->append ?: "") +
+-		    strlen(ip_str) + strlen(mac_str) + 1 > sizeof(bootargs)) {
++		    strlen(ip_str) + strlen(mac_str) + strlen(bootargs) + 1 > sizeof(bootargs)) {
+ 			printf("bootarg overflow %zd+%zd+%zd+1 > %zd\n",
+ 			       strlen(label->append ?: ""),
+ 			       strlen(ip_str), strlen(mac_str),
+@@ -420,7 +427,7 @@
+ 		}
+ 
+ 		if (label->append)
+-			strncpy(bootargs, label->append, sizeof(bootargs));
++			sprintf(bootargs, "%s %s", bootargs, label->append);
+ 
+ 		strcat(bootargs, ip_str);
+ 		strcat(bootargs, mac_str);

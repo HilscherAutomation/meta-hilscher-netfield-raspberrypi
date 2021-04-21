@@ -1,0 +1,29 @@
+From 5e4294f54cad812f8a647bf3622d1128e8842128 Mon Sep 17 00:00:00 2001
+From: netX System <github@hilscher.com>
+Date: Thu, 10 Jan 2019 08:54:48 +0000
+Subject: [PATCH] CAN-mcp251x: Fix timeout handling in reset function
+
+---
+ drivers/net/can/spi/mcp251x.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+index 6c2d3ab..373cbc5 100644
+--- a/drivers/net/can/spi/mcp251x.c
++++ b/drivers/net/can/spi/mcp251x.c
+@@ -642,6 +642,12 @@ static int mcp251x_hw_reset(struct spi_device *spi)
+ 	mdelay(MCP251X_OST_DELAY_MS);
+ 	
+ 	reg = mcp251x_read_reg(spi, CANSTAT);
++	ret = 5;/* wait maximum 100ms */
++	while ((ret > 0) && (reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF) {
++		msleep(20);
++		ret--;
++		reg = mcp251x_read_reg(spi, CANSTAT);
++	}
+ 	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
+ 		return -ENODEV;
+ 
+-- 
+2.7.4
+

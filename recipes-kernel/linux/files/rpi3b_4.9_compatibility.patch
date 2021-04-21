@@ -1,0 +1,26 @@
+Rasperry device tree was changed USB device tree part from 4.9 -> 4.19 in an incompatible way:
+ interrupts = <2 0>, <1 9>; -> interrupts = <1 9>, <2 0>;
+
+This break usb, especially ethernet support denying access to eth0 to verify device-label.
+Kernel 4.19 uses interrupt-names, thus it is safe to change the order back to 4.9 way and
+adjust names accordingly.
+
+diff --git a/arch/arm/boot/dts/bcm270x.dtsi b/arch/arm/boot/dts/bcm270x.dtsi
+index 9eb6bec..3b00f2e 100644
+--- a/arch/arm/boot/dts/bcm270x.dtsi
++++ b/arch/arm/boot/dts/bcm270x.dtsi
+@@ -131,10 +131,10 @@
+ 			compatible = "brcm,bcm2708-usb";
+ 			reg = <0x7e980000 0x10000>,
+ 			      <0x7e006000 0x1000>;
+-			interrupt-names = "usb",
+-					  "soft";
+-			interrupts = <1 9>,
+-				     <2 0>;
++			interrupt-names = "soft",
++					  "usb";
++			interrupts = <2 0>,
++				     <1 9>;
+ 		};
+ 
+ 		v3d@7ec00000 { /* vd3 */

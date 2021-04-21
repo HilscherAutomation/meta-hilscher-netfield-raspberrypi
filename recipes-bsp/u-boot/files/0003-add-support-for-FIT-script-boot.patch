@@ -1,0 +1,71 @@
+diff -aurN a/include/config_distro_bootcmd.h b/include/config_distro_bootcmd.h
+--- a/include/config_distro_bootcmd.h	2020-05-18 19:15:48.597976808 +0200
++++ b/include/config_distro_bootcmd.h	2020-05-18 19:43:54.008876696 +0200
+@@ -28,7 +28,7 @@
+ #define BOOTENV_SHARED_BLKDEV_BODY(devtypel) \
+ 		"if " #devtypel " dev ${devnum}; then " \
+ 			"devtype=" #devtypel "; " \
+-			"run scan_dev_for_boot_part; " \
++			"run scan_dev_for_boot_parts; " \
+ 		"fi\0"
+ 
+ #define BOOTENV_SHARED_BLKDEV(devtypel) \
+@@ -418,7 +418,7 @@
+ 	BOOTENV_SHARED_EFI \
+ 	BOOTENV_SHARED_VIRTIO \
+ 	"boot_prefixes=/ /boot/\0" \
+-	"boot_scripts=boot.scr.uimg boot.scr\0" \
++	"boot_scripts=boot-fit\0" \
+ 	"boot_script_dhcp=boot.scr.uimg\0" \
+ 	BOOTENV_BOOT_TARGETS \
+ 	\
+@@ -441,15 +441,25 @@
+ 			"${scriptaddr} ${prefix}${script}; "              \
+ 		"source ${scriptaddr}\0"                                  \
+ 	\
++	"boot_a_fit_script="                                              \
++		"load ${devtype} ${devnum}:${distro_bootpart} "           \
++			"${scriptaddr} ${prefix}${script}; "              \
++		"source ${scriptaddr}:script@1\0"                         \
++	\
+ 	"scan_dev_for_scripts="                                           \
++		"echo Scanning ${devtype}${devnum}:${distro_bootpart}...; " \
+ 		"for script in ${boot_scripts}; do "                      \
+ 			"if test -e ${devtype} "                          \
+ 					"${devnum}:${distro_bootpart} "   \
+ 					"${prefix}${script}; then "       \
+ 				"echo Found U-Boot script "               \
+ 					"${prefix}${script}; "            \
+-				"run boot_a_script; "                     \
+-				"echo SCRIPT FAILED: continuing...; "     \
++				"run boot_a_fit_script; "                 \
++				"if test $? != 0; then "                  \
++					"echo SCRIPT FAILED: continuing...; " \
++				"else "                                   \
++					"exit 0;"                         \
++				"fi; "                                    \
+ 			"fi; "                                            \
+ 		"done\0"                                                  \
+ 	\
+@@ -475,6 +485,21 @@
+ 		"done; "                                                  \
+ 		"setenv devplist\0"					  \
+ 	\
++	"scan_dev_for_boot_parts="                                        \
++		"devplist=\"1 2\";"                                        \
++		"for distro_bootpart in ${devplist}; do "                 \
++			"if fstype ${devtype} "                           \
++					"${devnum}:${distro_bootpart} "   \
++					"bootfstype; then "               \
++				"run scan_dev_for_scripts; "                 \
++				"if test $? != 0; then "                  \
++					"echo SCRIPT FAILED: continuing...; " \
++				"else "                                   \
++					"exit 0;"                         \
++				"fi; "                                    \
++			"fi; "                                            \
++		"done\0"                                                  \
++	\
+ 	BOOT_TARGET_DEVICES(BOOTENV_DEV)                                  \
+ 	\
+ 	"distro_bootcmd=" BOOTENV_SET_SCSI_NEED_INIT                      \

@@ -1,0 +1,25 @@
+From 05b7c2ec5725e2f0fb41859bdf023a1d38ae15ff Mon Sep 17 00:00:00 2001
+From: netX System <github@hilscher.com>
+Date: Thu, 22 Jun 2017 10:25:12 +0200
+Subject: [PATCH] change led0 to heartbeat trigger instead mmc
+
+---
+ arch/arm/boot/dts/bcm2710-rpi-3-b.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2710-rpi-3-b.dts b/arch/arm/boot/dts/bcm2710-rpi-3-b.dts
+index 98352b5..6b7d1de 100644
+--- a/arch/arm/boot/dts/bcm2710-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2710-rpi-3-b.dts
+@@ -161,7 +161,7 @@
+ &leds {
+ 	act_led: act {
+ 		label = "led0";
+-		linux,default-trigger = "mmc0";
++		linux,default-trigger = "heartbeat";
+ 		gpios = <&virtgpio 0 0>;
+ 	};
+ };
+-- 
+2.7.4
+

@@ -1,0 +1,11 @@
+[Unit]
+Description=Aligment Fault Setup
+
+[Service]
+Type=simple
+ExecStart=/bin/sh -c "echo 3 > /proc/cpu/alignment"
+User=root
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,11 @@
+--- a/arch/arm/boot/dts/bcm2710-rpi-3-b.dts	2020-09-17 09:28:28.438678620 +0200
++++ b/arch/arm/boot/dts/bcm2710-rpi-3-b.dts	2020-09-17 09:29:24.127732600 +0200
+@@ -165,7 +165,7 @@
+ &leds {
+ 	act_led: act {
+ 		label = "led0";
+-		linux,default-trigger = "mmc0";
++		linux,default-trigger = "heartbeat";
+ 		gpios = <&virtgpio 0 0>;
+ 	};
+ 

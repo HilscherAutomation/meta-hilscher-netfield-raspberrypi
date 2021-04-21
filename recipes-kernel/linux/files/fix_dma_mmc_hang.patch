@@ -1,0 +1,18 @@
+During initrd the deploy process may stall on low memory situations as the raspberrypi
+DMA driver allocates memory pool with GFP_KERNEL which may wait until more memory is available.
+DMA drivers shall use GFP_NOWAIT for DMA allocation at runtime.
+
+Long term test showed 2450 successful runs after this patch, while it stalled after maximum 30 runs
+without this patch.
+
+--- a/drivers/dma/bcm2835-dma.c	2019-04-18 12:04:58.670499740 +0200
++++ b/drivers/dma/bcm2835-dma.c	2019-04-18 12:06:29.984196198 +0200
+@@ -690,7 +692,7 @@
+ 	d = bcm2835_dma_create_cb_chain(chan, direction, false,
+ 					info, extra,
+ 					frames, src, dst, 0, 0,
+-					GFP_KERNEL);
++					GFP_NOWAIT);
+ 	if (!d)
+ 		return NULL;
+ 

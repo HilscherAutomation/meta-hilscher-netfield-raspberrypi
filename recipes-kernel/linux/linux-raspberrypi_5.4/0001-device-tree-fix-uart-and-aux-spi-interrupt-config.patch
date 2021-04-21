@@ -1,0 +1,23 @@
+--- a/arch/arm/boot/dts/overlays/uart1-overlay.dts	2020-09-17 09:33:34.440521959 +0200
++++ b/arch/arm/boot/dts/overlays/uart1-overlay.dts	2020-09-17 09:35:45.803061025 +0200
+@@ -10,6 +10,9 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart1_pins>;
+ 			status = "okay";
++			interrupts = <1 29>;
++			interrupt-parent = <&intc>;
++			autoload = "okay";
+ 		};
+ 	};
+ 
+--- a/arch/arm/boot/dts/overlays/spi1-1cs-overlay.dts	2020-09-17 09:32:54.851759747 +0200
++++ b/arch/arm/boot/dts/overlays/spi1-1cs-overlay.dts	2020-09-17 09:34:47.497932317 +0200
+@@ -29,6 +29,8 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&spi1_pins &spi1_cs_pins>;
+ 			cs-gpios = <&gpio 18 1>;
++			interrupts = <1 29>;
++			interrupt-parent = <&intc>;
+ 			status = "okay";
+ 
+ 			spidev1_0: spidev@0 {

@@ -1,0 +1,37 @@
+#!/bin/sh
+
+platform_init_enabled() {
+	return 0
+}
+
+platform_init_run() {
+	# load modules for devices
+	load_kernel_module usbnet
+	load_kernel_module smsc95xx
+
+	echo "Exporting the platform gpios ..."
+	echo 24 >     /sys/class/gpio/export
+	echo in >     /sys/class/gpio/gpio24/direction
+	echo rising > /sys/class/gpio/gpio24/edge
+	echo 1 >      /sys/class/gpio/gpio24/active_low
+
+	info "Creating platform symlinks ..."
+
+	mkdir -p /var/platform
+	mount -t tmpfs tmpfs /var/platform
+
+	# LEDs
+	ln -s /sys/class/leds/led0/brightness /var/platform/update_led
+	ln -s /sys/class/leds/user0:orange:user/brightness /var/platform/led_led2
+	ln -s /sys/class/leds/user1:orange:user/brightness /var/platform/led_led1
+
+	# Enable rtc to make sure systemd shows correct time stamps
+	echo pcf8563 0x51 > /sys/class/i2c-adapter/i2c-1/new_device
+	hwclock -s
+
+	# Insert nvram
+	echo 24c64 0x54 > /sys/class/i2c-adapter/i2c-1/new_device
+
+#	echo "Initializing the LED startup behavior ..."
+#	echo heartbeat > $(dirname $(readlink /var/platform/led_pg0))/trigger
+}
