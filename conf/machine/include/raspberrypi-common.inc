@@ -1,8 +1,5 @@
 require conf/machine/raspberrypi3.conf
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-raspberrypi"
-PREFERRED_VERSION_linux-raspberrypi = "5.4.%"
-
 MACHINE_FEATURES_append += "3g"
 
 ENABLE_SPI_BUS="1"
@@ -12,60 +9,91 @@ HDMI_DRIVE="2"
 CORE_FREQ="400"
 SERIAL_CONSOLES = ""
 
-#KEYS_DIR?="${DYNAMIC_LAYER_DIR_BASE}/meta-raspberrypi/keys/${MACHINE}"
-KEYS_DIR .= "/${MACHINE}"
-KEYS_IMAGE_SIGN_PRIV?="${KEYS_DIR}/boot/db.key"
-KEYS_IMAGE_SIGN_CERT?="${KEYS_DIR}/boot/db.crt"
-KEYS_IMAGE_SIGN_CERT_DER?="${KEYS_DIR}/boot/db.crt.der"
-
 #BSP_DEPLOYSCRIPT_DIR?="${DYNAMIC_LAYER_DIR_BASE}/meta-raspberrypi/scripts/deploy"
-BSP_DEPLOYSCRIPT_DIR ?= "${TOPDIR}/../meta-hilscher-netfield-intel/scripts/deploy"
+BSP_DEPLOYSCRIPT_DIR ??= "${TOPDIR}/../meta-hilscher-netfield-intel/scripts/deploy"
 
+#############################################################################
+IMAGE_CLASSES_append += "hilscher_image_types"
+IMAGE_FSTYPES += "squashfs wic.bz2 swu licenses.tar.bz2"
+
+#############################################################################
+# Kernel
+#############################################################################
+KERNEL_CLASSES_append += "kernel-fitimage"
+KERNEL_IMAGETYPES_append += "fitImage"
+
+#############################################################################
+# Preferred components/settings
+#############################################################################
 KERNEL_DEVICETREE = "bcm2710-rpi-3-b.dtb"
 RPI_KERNEL_DEVICETREE_OVERLAYS = " \
-    overlays/spi1-1cs.dtbo \
-    overlays/led-gpio.dtbo \
-    "
-WIC_IMAGE_DEPENDENCIES_append += "bootfiles"
-IMAGE_BOOT_FILES = "${BOOTFILES_DIR_NAME}/* \
-                    u-boot.bin;${SDIMG_KERNELIMAGE} \
-                    bcm2710-rpi-3-b.dtb;bcm2710-rpi-3-b.dtb \
-                    boot-script-fit/* \
+	overlays/spi1-1cs.dtbo \
+	overlays/led-gpio.dtbo \
 "
-RPI_USE_U_BOOT="1"
-UBOOT_DTB_BINARY=""
+PREFERRED_PROVIDER_virtual/kernel = "linux-raspberrypi"
+PREFERRED_VERSION_linux-raspberrypi = "5.4.%"
+
+INITRAMFS_IMAGE ?= "core-image-minimal-initramfs"
+HILSCHER_RESCUE_IMAGE ??= "hilscher-rescue-image"
+
+#############################################################################
+# Keys
+#############################################################################
+PLATFORM_SIGN ??= "1"
+PLATFORM_KEYDIR ??= "${KEYS_DIR}/boot"
+PLATFORM_KEYNAME ??= "db"
+
+#KEYS_DIR ??= "${DYNAMIC_LAYER_DIR_BASE}/meta-raspberrypi/keys/${MACHINE}"
+KEYS_DIR .= "/${MACHINE}"
+KEYS_IMAGE_SIGN_PRIV ??= "${KEYS_DIR}/boot/db.key"
+KEYS_IMAGE_SIGN_CERT ??= "${KEYS_DIR}/boot/db.crt"
+KEYS_IMAGE_SIGN_CERT_DER ??= "${KEYS_DIR}/boot/db.crt.der"
+
+FIT_HASH_ALG = "sha256"
+FIT_SIGN_ALG = "rsa4096"
+
+#############################################################################
+# Bootloader
+#############################################################################
+RPI_USE_U_BOOT = "1"
+UBOOT_DTB_BINARY = ""
 UBOOT_SIGN_ENABLE = "1"
 UBOOT_SIGN_KEYDIR = "${KEYS_DIR}/boot/"
 UBOOT_SIGN_KEYNAME = "db"
 UBOOT_MKIMAGE_DTCOPTS = "-I dts -O dtb -p 2000"
 
-# Build fitImage for u-boot using rpi3 fdt as base
-KERNEL_IMAGETYPE = "fitImage"
-FIT_HASH_ALG = "sha256"
-FIT_SIGN_ALG = "rsa4096"
+#############################################################################
+# Contents of boot partition (excluding rootfs)
+#############################################################################
+IMAGE_BOOT_FILES = " \
+	${BOOTFILES_DIR_NAME}/* \
+	u-boot.bin;${SDIMG_KERNELIMAGE} \
+	bcm2710-rpi-3-b.dtb;bcm2710-rpi-3-b.dtb \
+	boot-script-fit/* \
+"
 
-KERNEL_CLASSES_append += "kernel-fitimage"
-INITRAMFS_IMAGE = "core-image-minimal-initramfs"
+#############################################################################
+# WIC images
+#############################################################################
+WIC_IMAGE_DEPENDENCIES_append += "bootfiles boot-script-fit"
+WKS_FILE = "hilscher-msdos-boot-rescue-system-lvm.wks.in"
 
-IMAGE_FSTYPES="squashfs wic.bz2"
+WIC_BOOT_PART_CONTENT ??= "${IMAGE_BOOT_FILES}"
+WIC_RESCUE_PART_CONTENT ??= "${HILSCHER_RESCUE_IMAGE_LINK_NAME}.squashfs rboot.cfg ${IMAGE_BOOT_FILES} fitImage initrd-api-part-cfg;initrd-api"
+WIC_SYSTEM_PART_CONTENT ??= "${IMAGE_LINK_NAME}.squashfs boot.cfg fitImage"
 
-#-----------------------------------------------
-require conf/machine/hilscher-machine-vars.conf
+#############################################################################
+# SWU images
+#############################################################################
+SWU_RSYNC_PART_UPDATE ??= "boot system"
+SWU_BOOT_PART_CONTENT ??= "${IMAGE_BOOT_FILES}"
+SWU_SYSTEM_PART_CONTENT ??= "${IMAGE_LINK_NAME}.squashfs nboot.cfg fitImage"
 
-PLATFORM_SIGN ?= "1"
-PLATFORM_KEYDIR ?= "${KEYS_DIR}/boot"
-PLATFORM_KEYNAME ?= "db"
-
-PART_SCHEME ?= "boot-rescue-system-lvm"
-WKS_FILE = "${PART_SCHEME_DIRS}/${PART_SCHEME}/hilscher-wic-image.wks.in"
-HILSCHER_RESCUE_IMAGE ?= "hilscher-rescue-image"
-WIC_IMAGE_DEPENDENCIES_append += "boot-script-fit"
-WIC_BOOT_PART_BASE_CONTENT ?= "${IMAGE_BOOT_FILES}"
-WIC_BOOT_PART_EXTRA_CONTENT ?= ""
-WIC_RESCUE_PART_EXTRA_CONTENT ?= "rboot.cfg ${IMAGE_BOOT_FILES} fitImage initrd-api-part-cfg;initrd-api"
-WIC_SYSTEM_PART_EXTRA_CONTENT ?= "boot.cfg fitImage"
-SWU_SYSTEM_PART_EXTRA_CONTENT ?= "nboot.cfg fitImage"
-
+#############################################################################
+# System Partitioning
+#############################################################################
+# Physical device of system partitions
+PHYSICAL_SYSTEM_DEVICE ??= "/dev/mmcblk0 /dev/mmcblk1"
 # Size of boot partition
 IMAGE_PART_BOOT_SIZE ??= "64M"
 # Size of rescue partition
@@ -81,11 +109,8 @@ PART_DATA_LV_BACKUP_SIZE ??= "35%VG"
 # Size of logical volume "snapshot" in userdata partition
 PART_DATA_LV_SNAPSHOT_SIZE ??= "5%VG"
 
-IMAGE_CLASSES_append += "hilscher_image_types"
-
-HILSCHER_OVERLAY ?= "/dev/mapper/data-data"
-HILSCHER_OVERLAYTARGETS ?= "${NETIOT_OVERLAY_DIRS}"
-
-# Physical device of system partitions
-PHYSICAL_SYSTEM_DEVICE ?= "/dev/mmcblk0 /dev/mmcblk1"
-#-----------------------------------------------
+#############################################################################
+# rootfs overlay
+#############################################################################
+HILSCHER_OVERLAY ??= "/dev/mapper/data-data"
+HILSCHER_OVERLAYTARGETS ??= "${NETIOT_OVERLAY_DIRS}"
