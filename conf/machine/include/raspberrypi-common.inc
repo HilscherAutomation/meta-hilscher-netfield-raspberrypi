@@ -85,7 +85,7 @@ WIC_SYSTEM_PART_CONTENT ??= "${IMAGE_LINK_NAME}.squashfs boot.cfg fitImage"
 #############################################################################
 # SWU images
 #############################################################################
-SWU_FILES += "swupdate/helper.lua;helper.lua"
+SWU_SCRIPTS += "swupdate/helper.lua;helper.lua"
 
 SWU_RSYNC_PART_UPDATE ??= "boot system"
 SWU_BOOT_PART_CONTENT ??= "${IMAGE_BOOT_FILES}"
