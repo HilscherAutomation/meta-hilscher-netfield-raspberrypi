@@ -42,3 +42,12 @@ do_install_append() {
     rm -r ${D}/boot/*
     install -m 0644 ${B}/u-boot.bin ${D}/boot/${RPI_BOOTIMAGE_NAME}
 }
+
+SIGNED_TREE = "${B}/arch/arm/dts/${UBOOT_DEVICE_TREE}.dtb"
+
+do_deploy_append() {
+    # Copy this device tree to deploy directory.
+    # This tree contains the public key which is required in the signature verification step of the fitimage.
+    mkdir -p ${DEPLOYDIR}/devicetree/
+    cp ${SIGNED_TREE} ${DEPLOYDIR}/devicetree/pub_key.dtb
+}
