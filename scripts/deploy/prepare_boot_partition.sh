@@ -12,7 +12,7 @@ if [ "${image_type}" == "production_scan" ] ; then
     # Copy production_scan_image squash fs
     production_image="$(dirname ${ROOTFS})/production-scan-image.rootfs.squashfs"
     cp ${production_image} rootfs.img
-    openssl dgst -sha512 -sign ${signing_key} -out rootfs.img.sig rootfs.img
+    openssl dgst ${engine_params} -sha512 -sign ${signing_key} -out rootfs.img.sig rootfs.img
 elif [ "${image_type}" == "update" ] ; then
     cp ${DEPLOY_DIR_IMAGE}/boot-script-fit/boot-update-fit boot-fit
 else
