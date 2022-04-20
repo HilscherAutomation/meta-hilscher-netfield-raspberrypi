@@ -81,8 +81,8 @@ WIC_IMAGE_DEPENDENCIES_append += "bootfiles boot-script-fit"
 WKS_FILE = "hilscher-msdos-boot-rescue-system-lvm.wks.in"
 
 WIC_BOOT_PART_CONTENT ??= "${IMAGE_BOOT_FILES}"
-WIC_RESCUE_PART_CONTENT ??= "${HILSCHER_RESCUE_IMAGE_LINK_NAME}.squashfs rboot.cfg ${IMAGE_BOOT_FILES} fitImage initrd-api-part-cfg;initrd-api"
-WIC_SYSTEM_PART_CONTENT ??= "${IMAGE_LINK_NAME}.squashfs boot.cfg fitImage"
+WIC_RESCUE_PART_CONTENT ??= ""
+WIC_SYSTEM_PART_CONTENT ??= "${IMAGE_LINK_NAME}.squashfs boot.cfg fitImage initrd-api-part-cfg"
 
 #############################################################################
 # SWU images
