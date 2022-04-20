@@ -9,13 +9,13 @@ platform_init_run() {
 	load_kernel_module usbnet
 	load_kernel_module smsc95xx
 
-	echo "Exporting the platform gpios ..."
+	__debug "Exporting the platform gpios ..."
 	echo 24 >     /sys/class/gpio/export
 	echo in >     /sys/class/gpio/gpio24/direction
 	echo rising > /sys/class/gpio/gpio24/edge
 	echo 1 >      /sys/class/gpio/gpio24/active_low
 
-	info "Creating platform symlinks ..."
+	__debug "Creating platform symlinks ..."
 
 	mkdir -p /var/platform
 	mount -t tmpfs tmpfs /var/platform
