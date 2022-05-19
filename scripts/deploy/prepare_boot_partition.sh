@@ -2,7 +2,7 @@
 
 echo "preparing bootpartion for netpi $1"
 
-cp ${DEPLOY_DIR_IMAGE}/fitImage-core-image-minimal-initramfs*.bin fitImage
+cp ${DEPLOY_DIR_IMAGE}/fitImage-core-image-minimal-initramfs*.bin Image
 
 echo ${FIRMWARE_VERSION} > VERSION
 
@@ -16,5 +16,5 @@ if [ "${image_type}" == "production_scan" ] ; then
 elif [ "${image_type}" == "update" ] ; then
     cp ${DEPLOY_DIR_IMAGE}/boot-script-fit/boot-update-fit boot-fit
 else
-    cp ${DEPLOY_DIR_IMAGE}/boot-script-fit/boot-recovery-fit boot-fit
+    cp ${DEPLOY_DIR_IMAGE}/boot-script-fit/boot-recovery.scr ./boot.scr
 fi

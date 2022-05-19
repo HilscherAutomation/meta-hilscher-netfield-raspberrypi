@@ -1,16 +1,18 @@
-FILESEXTRAPATHS_append := "${THISDIR}/files:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-RDEPENDS_${PN}_append += " boot-script-fit "
+require recipes-bsp/u-boot/u-boot-netfield.inc
+
+DEPENDS_append += "u-boot-tools-native"
+
 RDEPENDS_${PN}_remove += " rpi-u-boot-scr"
 
-SRC_URI_append += "file://netpi_defconfig"
-SRC_URI_append += "\
-                   file://0002-added-netpi-configuration-header-allows-overriding-c.patch \
-                   file://0003-add-support-for-FIT-script-boot.patch \
-                   file://netpi.h \
+SRC_URI_append += "file://netpi_defconfig \
                    file://fat_show_files_without_arch_attr.patch \
-                   file://pxe_add_bootargs_append_func.patch"
-
+                   file://pxe_add_bootargs_append_func.patch \
+                   file://machine_config.h \
+                   file://Changed-config-file-from-machine-to-distro-specific-.patch \
+                   file://fix_console_handling.patch \
+                   "
 
 SRC_URI_append += "file://disable_uart.patch"
 
@@ -35,7 +37,7 @@ do_configure_prepend() {
     if ${@bb.utils.contains('EXTRA_IMAGE_FEATURES', 'debug-tweaks', 'true', 'false', d)}; then
         echo "#define DEBUG_TWEAKS 1" > ${S}/include/configs/netpi.h
     fi
-    cat ${WORKDIR}/netpi.h >> ${S}/include/configs/netpi.h
+    cp ${WORKDIR}/machine_config.h ${S}/include/configs/
 }
 
 do_install_append() {

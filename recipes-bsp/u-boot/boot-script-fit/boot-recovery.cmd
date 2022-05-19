@@ -5,6 +5,5 @@ setenv bootargs "$bootargs root=LABEL=RECOVERY rootwait logo.nologo dwc_otg.fiq_
 usb dev 0
 
 fdt addr $fdtcontroladdr
-fatload usb 0:1 0x20000000 fitImage
+fatload usb 0:1 0x20000000 Image
 bootm 0x20000000 0x20000000 ${fdt_addr}
-
