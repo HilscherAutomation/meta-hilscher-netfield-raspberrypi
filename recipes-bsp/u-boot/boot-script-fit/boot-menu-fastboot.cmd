@@ -13,28 +13,29 @@ setenv bootargs "$bootargs firmware_class.path=/usr/local/lib/firmware "
 # menu index count
 setexpr mi 0
 
-testaddr=0x20000000
 for conf in boot.cfg aboot.cfg rboot.cfg; do
         for part in 3 2; do
                 test "${part}" = "3" && partname="system"
                 test "${part}" = "2" && partname="rescue"
-                if load mmc ${mmcdev}:${part} ${testaddr} ${conf}; then
-                        env import ${testaddr} 0x100
+                if load mmc ${mmcdev}:${part} ${loadaddr} ${conf}; then
+                        env import ${loadaddr} 0x100
                         test -z "${description}" && description="unknown"
                         test "${conf}" = "boot.cfg" && type=""
                         test "${conf}" = "aboot.cfg" && type="(ALTERNATIVE)"
                         test "${conf}" = "rboot.cfg" && type="(RESCUE)"
                         bootcfg=""
                         setenv bootmenu_${mi} ${description} ${type} = "
-                                setenv bootargs $bootargs bootCfg=LABEL=${partname}/${conf} rootfstype=squashfs @OVERLAYS@ rootflags=noatime overlayflags=noatime ro rootwait logo.nologo cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 loglevel=4;
+                                setenv bootargs $bootargs bootCfg=LABEL=${partname}/${conf} rootfstype=squashfs rootflags=noatime overlayflags=noatime ro rootwait logo.nologo cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 loglevel=4;
                                 fdt addr $fdtcontroladdr;
-                                load mmc ${mmcdev}:${part} ${testaddr} ${kernel};
-                                bootm ${testaddr} ${testaddr} ${fdt_addr};
+                                load mmc ${mmcdev}:${part} ${loadaddr} ${kernel};
+                                bootm ${loadaddr} ${loadaddr} ${fdt_addr};
                         "
                         setexpr mi ${mi} + 1
                 fi
         done
 done
+
+setenv bootmenu_${mi} FastBoot = "run fastboot"
 
 bootmenu 3
 
