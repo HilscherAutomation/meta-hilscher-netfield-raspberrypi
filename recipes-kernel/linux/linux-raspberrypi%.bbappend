@@ -16,8 +16,7 @@ UBOOT_RD_ENTRYPOINT  = "0x0A000000"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-OVERLAYS = "${@ ('overlays=/') if (d.getVar('NETIOT_ROOT_OVERLAY')=='1') else ('overlays=' + ','.join(d.getVar('NETIOT_OVERLAY_DIRS').split(' ')))}"
-CMDLINE = "dwc_otg.lpm_enable=0 console=tty1 rootflags=noatime,discard overlayflags=noatime,discard ro bootCfg=LABEL=system/boot.cfg rootwait ${OVERLAYS}"
+CMDLINE = "dwc_otg.lpm_enable=0 console=tty1 logo.nologo cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0"
 
 # DTS files
 SRC_URI_append += "file://led-gpio.patch"
