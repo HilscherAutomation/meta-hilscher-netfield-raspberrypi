@@ -4,7 +4,7 @@ require recipes-bsp/u-boot/u-boot-netfield.inc
 
 DEPENDS_append += "u-boot-tools-native"
 
-RDEPENDS_${PN}_remove += " rpi-u-boot-scr"
+DEPENDS_${PN}_remove += "rpi-u-boot-scr"
 
 SRC_URI_append += "file://netpi_defconfig \
                    file://fat_show_files_without_arch_attr.patch \

@@ -25,7 +25,7 @@ for conf in boot.cfg aboot.cfg rboot.cfg; do
                         test "${conf}" = "rboot.cfg" && type="(RESCUE)"
                         bootcfg=""
                         setenv bootmenu_${mi} ${description} ${type} = "
-                                setenv bootargs $bootargs bootCfg=LABEL=${partname}/${conf} rootfstype=squashfs rootflags=noatime overlayflags=noatime ro rootwait logo.nologo cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 loglevel=7;
+                                setenv bootargs $bootargs bootCfg=LABEL=${partname}/${conf} rootfstype=squashfs rootflags=noatime overlayflags=noatime ro rootwait loglevel=7;
                                 fdt addr $fdtcontroladdr;
                                 load mmc ${mmcdev}:${part} ${loadaddr} ${kernel};
                                 bootm ${loadaddr} ${loadaddr} ${fdt_addr};
