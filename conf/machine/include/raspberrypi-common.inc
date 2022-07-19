@@ -9,8 +9,7 @@ HDMI_DRIVE="2"
 CORE_FREQ="400"
 SERIAL_CONSOLES = ""
 
-#BSP_DEPLOYSCRIPT_DIR?="${DYNAMIC_LAYER_DIR_BASE}/meta-raspberrypi/scripts/deploy"
-BSP_DEPLOYSCRIPT_DIR ??= "${TOPDIR}/../meta-hilscher-netfield-intel/scripts/deploy"
+BSP_DEPLOYSCRIPT_DIR ??= "${TOPDIR}/../meta-hilscher-netfield-raspberrrypi/scripts/deploy"
 
 #############################################################################
 IMAGE_CLASSES_append += "hilscher_image_types"
