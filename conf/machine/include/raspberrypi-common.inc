@@ -1,4 +1,5 @@
 require conf/machine/raspberrypi3.conf
+BBMASK += "meta-raspberrypi/recipes-kernel/linux/linux-raspberrypi_4"
 
 MACHINE_FEATURES_append += "3g"
 
