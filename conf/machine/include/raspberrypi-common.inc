@@ -16,6 +16,9 @@ BSP_DEPLOYSCRIPT_DIR ??= "${TOPDIR}/../meta-hilscher-netfield-raspberrrypi/scrip
 IMAGE_CLASSES_append += "hilscher_image_types"
 IMAGE_FSTYPES += "squashfs wic.bz2 swu licenses.tar.bz2"
 
+# Provide 2.3 compatible boot files
+ADDITIONAL_USB_FILES = "boot-script-fit/fitImage-boot-2.3-recovery.scr;boot-fit"
+
 #############################################################################
 # Kernel
 #############################################################################
