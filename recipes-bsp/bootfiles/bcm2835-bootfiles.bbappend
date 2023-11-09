@@ -2,7 +2,7 @@
 # in inherits and somehow used from sstate-cache, even if different files are deployed
 PR="r4"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/boot
 
     for i in ${S}/*.elf; do
@@ -22,10 +22,10 @@ do_install_append() {
     touch ${D}/boot/${PN}-${PV}.stamp
 }
 
-do_deploy_append() {
+do_deploy:append() {
     # Delete RPI4 stuff
     rm ${DEPLOYDIR}/${PN}/start4*.elf ${DEPLOYDIR}/${PN}/fixup4*.dat
 }
 
 INSANE_SKIP = "arch"
-FILES_${PN} = "/boot"
+FILES:${PN} = "/boot"

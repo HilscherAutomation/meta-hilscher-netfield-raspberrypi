@@ -24,10 +24,10 @@ do_install() {
   install ${S}/eepflash.sh ${D}/opt/rpi-hats-eepromutils
 }
 
-FILES_${PN} = "/opt/rpi-hats-eepromutils/"
+FILES:${PN} = "/opt/rpi-hats-eepromutils/"
 
 INHIBIT_PACKAGE_DEBUG_SPLIT="1"
 # no GNU_HASH in binary
-INSANE_SKIP_${PN} = "ldflags"
+INSANE_SKIP:${PN} = "ldflags"
 
 SECURITY_STRINGFORMAT=""

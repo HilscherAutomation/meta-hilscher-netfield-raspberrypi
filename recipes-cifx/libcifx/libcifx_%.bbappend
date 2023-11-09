@@ -1,10 +1,10 @@
 PACKAGECONFIG = "tun spm"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI_append += "file://R160D000.nxf"
+SRC_URI:append = " file://R160D000.nxf"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/opt/cifx/FW
     install ${WORKDIR}/R160D000.nxf ${D}/opt/cifx/FW
 
@@ -19,4 +19,4 @@ do_install_append() {
     fi
 }
 
-FILES_${PN}_append += "/opt/cifx/deviceconfig/FW/channel0 /opt/cifx/FW"
+FILES:${PN}:append = " /opt/cifx/deviceconfig/FW/channel0 /opt/cifx/FW"

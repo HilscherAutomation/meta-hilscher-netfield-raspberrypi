@@ -1,7 +1,7 @@
 require conf/machine/raspberrypi3.conf
 BBMASK += "meta-raspberrypi/recipes-kernel/linux/linux-raspberrypi_4"
 
-MACHINE_FEATURES_append += "3g"
+MACHINE_FEATURES:append = " 3g"
 
 ENABLE_SPI_BUS="1"
 ENABLE_I2C="1"
@@ -13,7 +13,7 @@ SERIAL_CONSOLES = ""
 BSP_DEPLOYSCRIPT_DIR ??= "${TOPDIR}/../meta-hilscher-netfield-raspberrrypi/scripts/deploy"
 
 #############################################################################
-IMAGE_CLASSES_append += "hilscher_image_types"
+IMAGE_CLASSES:append = " hilscher_image_types"
 IMAGE_FSTYPES += "squashfs wic.bz2 swu licenses.tar.bz2"
 
 # Provide 2.3 compatible boot files
@@ -22,8 +22,8 @@ ADDITIONAL_USB_FILES = "boot-script-fit/fitImage-boot-2.3-recovery.scr;boot-fit"
 #############################################################################
 # Kernel
 #############################################################################
-KERNEL_CLASSES_append += "kernel-fitimage"
-KERNEL_IMAGETYPES_append += "fitImage"
+KERNEL_CLASSES:append = " kernel-fitimage"
+KERNEL_IMAGETYPES:append = " fitImage"
 
 #############################################################################
 # Preferred components/settings
@@ -80,7 +80,7 @@ IMAGE_BOOT_FILES += "boot-script-fit/fitImage-boot-menu${SCRIPT_SUFFIX};boot-fit
 #############################################################################
 # WIC images
 #############################################################################
-WIC_IMAGE_DEPENDENCIES_append += "bootfiles boot-script-fit"
+WIC_IMAGE_DEPENDENCIES:append = " bootfiles boot-script-fit"
 WKS_FILE = "hilscher-msdos-boot-rescue-system-lvm.wks.in"
 
 WIC_BOOT_PART_CONTENT ??= ""

@@ -12,5 +12,5 @@ do_install() {
   ln -s ${systemd_unitdir}/system/system-init.service ${D}/etc/systemd/system/multi-user.target.wants/system-init.service
 }
 
-FILES_${PN} += "/lib/systemd/system/system-init.service"
-FILES_${PN} += " /etc/systemd/system/multi-user.target.wants/system-init.service"
+FILES:${PN} += "/lib/systemd/system/system-init.service"
+FILES:${PN} += " /etc/systemd/system/multi-user.target.wants/system-init.service"

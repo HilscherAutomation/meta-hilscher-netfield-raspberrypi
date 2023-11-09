@@ -1,5 +1,5 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_append += "file://boot-2.3-recovery.cmd"
+SRC_URI:append = " file://boot-2.3-recovery.cmd"
 
-BOOT_SCRIPTS_append += "boot-2.3-recovery.cmd"
+BOOT_SCRIPTS:append = " boot-2.3-recovery.cmd"
