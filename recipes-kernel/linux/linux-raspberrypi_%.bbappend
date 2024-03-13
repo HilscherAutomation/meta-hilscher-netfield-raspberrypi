@@ -16,8 +16,6 @@ UBOOT_RD_ENTRYPOINT  = "0x0A000000"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-CMDLINE = "dwc_otg.lpm_enable=0 console=tty1 logo.nologo dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0"
-
 # DTS files
 SRC_URI:append = " file://led-gpio.patch"
 
