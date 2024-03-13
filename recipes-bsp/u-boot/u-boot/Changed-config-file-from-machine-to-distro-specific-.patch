@@ -1,6 +1,8 @@
---- a/include/configs/rpi.h	2022-05-19 16:51:19.152218724 +0200
-+++ b/include/configs/rpi.h	2022-05-19 16:52:03.989205632 +0200
-@@ -183,13 +183,11 @@
+diff --git a/include/configs/rpi.h b/include/configs/rpi.h
+index 4c5c1ac31f..31b5b9f5a7 100644
+--- a/include/configs/rpi.h
++++ b/include/configs/rpi.h
+@@ -167,14 +167,11 @@
  	BOOT_TARGET_PXE(func) \
  	BOOT_TARGET_DHCP(func)
  
@@ -9,6 +11,7 @@
  #define CONFIG_EXTRA_ENV_SETTINGS \
 -	"dhcpuboot=usb start; dhcp u-boot.uimg; bootm\0" \
 -	ENV_DEVICE_SETTINGS \
+-	ENV_DFU_SETTINGS \
 +	NETIOT_CONFIG_EXTRA_ENV_SETTINGS \
  	ENV_MEM_LAYOUT_SETTINGS \
 -	BOOTENV

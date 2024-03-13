@@ -7,12 +7,11 @@ DEPENDS:append = " u-boot-tools-native"
 DEPENDS:${PN}:remove = "rpi-u-boot-scr"
 
 SRC_URI:append = " file://netpi_defconfig \
-                   file://fat_show_files_without_arch_attr.patch \
-                   file://pxe_add_bootargs_append_func.patch \
                    file://machine_config.h \
-                   file://Changed-config-file-from-machine-to-distro-specific-.patch \
-                   file://fix_console_handling.patch \
-                   "
+                   file://0003-add-support-for-FIT-script-boot.patch \
+                   file://Changed-config-file-from-machine-to-distro-specific-.patch"
+#                   file://pxe_add_bootargs_append_func.patch \
+#                   file://fix_console_handling.patch"
 
 SRC_URI:append = " file://disable_uart.patch"
 
@@ -21,7 +20,7 @@ UBOOT_MACHINE = "netpi_defconfig"
 RPI_BOOTIMAGE_NAME ?= "kernel7.img"
 
 #default device tree u-boot will use
-UBOOT_DEVICE_TREE="bcm2837-rpi-3-b"
+UBOOT_DEVICE_TREE = "bcm2837-rpi-3-b"
 
 inherit dts-sign
 #variables required to patch public key into dts
