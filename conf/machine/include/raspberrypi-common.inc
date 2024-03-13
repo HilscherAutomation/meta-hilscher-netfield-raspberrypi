@@ -1,5 +1,5 @@
 require conf/machine/raspberrypi3.conf
-BBMASK += "meta-raspberrypi/recipes-kernel/linux/linux-raspberrypi_4"
+BBMASK += "meta-raspberrypi/recipes-kernel/linux/linux-raspberrypi_5.10"
 
 MACHINE_FEATURES:append = " 3g"
 
@@ -34,7 +34,10 @@ RPI_KERNEL_DEVICETREE_OVERLAYS = " \
 	overlays/led-gpio.dtbo \
 "
 PREFERRED_PROVIDER_virtual/kernel = "linux-raspberrypi"
-PREFERRED_VERSION_linux-raspberrypi = "5.4.%"
+PREFERRED_VERSION_linux-raspberrypi = "5.15.%"
+
+PREFERRED_PROVIDER_virtual/bootloader = "u-boot"
+PREFERRED_VERSION_u-boot = "2022.%"
 
 INITRAMFS_IMAGE ?= "core-image-minimal-initramfs"
 HILSCHER_RESCUE_IMAGE ??= "hilscher-rescue-image"
@@ -80,7 +83,7 @@ IMAGE_BOOT_FILES += "boot-script-fit/fitImage-boot-menu${SCRIPT_SUFFIX};boot-fit
 #############################################################################
 # WIC images
 #############################################################################
-WIC_IMAGE_DEPENDENCIES:append = " bootfiles boot-script-fit"
+WIC_IMAGE_DEPENDENCIES:append = " rpi-bootfiles boot-script-fit"
 WKS_FILE = "hilscher-msdos-boot-rescue-system-lvm.wks.in"
 
 WIC_BOOT_PART_CONTENT ??= ""
