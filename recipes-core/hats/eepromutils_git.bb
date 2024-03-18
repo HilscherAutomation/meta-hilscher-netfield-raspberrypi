@@ -5,7 +5,7 @@ SECTION = "devel"
 
 LICENSE = "CLOSED"
 
-SRC_URI = "git://github.com/raspberrypi/hats.git;protocol=https"
+SRC_URI = "git://github.com/raspberrypi/hats.git;branch=master;protocol=https"
 SRCREV = "55b1b6dec119dabf026b77587da7c2e5cf3f6024"
 S="${WORKDIR}/git/eepromutils"
 PV="git${SRCPV}"
