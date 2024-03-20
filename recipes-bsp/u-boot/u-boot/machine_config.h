@@ -13,18 +13,19 @@
 
 #ifdef CONFIG_SYS_LOAD_ADDR
 	#undef CONFIG_SYS_LOAD_ADDR
-	#define CONFIG_SYS_LOAD_ADDR CONFIG_LOADADDR
+	#define CONFIG_SYS_LOAD_ADDR 0x20000000
 #endif
 
 /* Platform specific initialization */
-//  Note:
-//    Since the MSDOS partition table does not contain the partition labels,
-//    these will be hard configured int the platform_init script.
-//
-//    When the platform switch to GPT partition table, the code below can be used to obtain the partition numbers.
-//      "part number $plat_dev_if $plat_dev boot plat_boot_part; " \
-//      "part number $plat_dev_if $plat_dev system plat_system_part; " \
-//      "part number $usb_dev_if $usb_dev recovery usb_recovery_part; "
+/* Note:
+	Since the MSDOS partition table does not contain the partition labels,
+	these will be hard configured int the platform_init script.
+
+	When the platform switch to GPT partition table, the code below can be used to obtain the partition numbers.
+		"part number $plat_dev_if $plat_dev boot plat_boot_part; " \
+		"part number $plat_dev_if $plat_dev system plat_system_part; " \
+		"part number $usb_dev_if $usb_dev recovery usb_recovery_part; "
+*/
 #define PLATFORM_INIT \
 	"fdt addr $fdt_addr && fdt get value basebootargs /chosen bootargs; " \
 	"setenv basebootargs $basebootargs firmware_class.path=/usr/local/lib/firmware rootflags=noatime overlayflags=noatime ro rootwait loglevel=4; " \
@@ -41,4 +42,4 @@
 	"plat_dev_linux=/dev/mmcblk0p\0" \
 	"usb_dev_if=usb\0" \
 	"usb_dev=0\0" \
-	"fdtfile=bcm2837-rpi-3-b.dtb\0 " \
+	"fdtfile=bcm2837-rpi-3-b.dtb\0 "

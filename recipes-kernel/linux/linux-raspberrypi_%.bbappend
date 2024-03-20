@@ -6,28 +6,26 @@ KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 LINUX_BASEVERSION="${@".".join(d.getVar('LINUX_VERSION', d).split(".")[:2])}"
 do_fetch[vardeps] += "LINUX_BASEVERSION"
-SRC_URI_append += "git://git.yoctoproject.org/git/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-${LINUX_BASEVERSION};destsuffix=${KMETA};protocol=https"
-SRC_URI_append += "file://enable_bluetooth.cfg"
-KERNEL_FEATURES_append += "features/bluetooth/bluetooth.scc"
-KERNEL_FEATURES_append += "features/media/media.scc features/media/media-usb-webcams.scc"
+SRC_URI:append = " git://git.yoctoproject.org/git/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-${LINUX_BASEVERSION};destsuffix=${KMETA};protocol=https"
+SRC_URI:append = " file://enable_bluetooth.cfg"
+KERNEL_FEATURES:append = " features/bluetooth/bluetooth.scc"
+KERNEL_FEATURES:append = " features/media/media.scc features/media/media-usb-webcams.scc"
 
 UBOOT_RD_LOADADDRESS = "0x0A000000"
 UBOOT_RD_ENTRYPOINT  = "0x0A000000"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-
-CMDLINE = "dwc_otg.lpm_enable=0 console=tty1 logo.nologo dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 # DTS files
-SRC_URI_append += "file://led-gpio.patch"
+SRC_URI:append = " file://led-gpio.patch"
 
 # Patches
-SRC_URI_append += "file://0001-Added-initial-nxpi-overlays.patch \
+SRC_URI:append = " file://0001-Added-initial-nxpi-overlays.patch \
                    file://0001-change-led0-to-heartbeat-trigger-instead-mmc.patch \
                    file://0001-device-tree-fix-uart-and-aux-spi-interrupt-config.patch"
 
 # Kernel config
-SRC_URI_append += "file://enable_cfg80211_wireless_compat_ext.cfg \
+SRC_URI:append = " file://enable_cfg80211_wireless_compat_ext.cfg \
                    file://enable_i2c_chardev.cfg \
                    file://enable_led_trigger.cfg \
                    file://enable_nvram.cfg \
@@ -40,7 +38,7 @@ SRC_URI_append += "file://enable_cfg80211_wireless_compat_ext.cfg \
                    file://rtl8152.cfg \
                    file://use_performance_governor.cfg"
 
-do_compile_append() {
+do_compile:append() {
         for DTB in ${RPI_KERNEL_DEVICETREE_OVERLAYS}; do
                 DTB=`normalize_dtb "${DTB}"`
                 oe_runmake ${DTB}
@@ -95,7 +93,7 @@ EOF
         done
 }
 
-do_deploy_append() {
+do_deploy:append() {
         for DTB in ${RPI_KERNEL_DEVICETREE_OVERLAYS}; do
                 DTB=`normalize_dtb "${DTB}"`
                 DTB_EXT=${DTB##*.}

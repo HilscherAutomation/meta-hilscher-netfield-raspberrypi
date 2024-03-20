@@ -15,7 +15,7 @@ diff -aurN a/include/config_distro_bootcmd.h b/include/config_distro_bootcmd.h
  	BOOTENV_SHARED_VIRTIO \
  	"boot_prefixes=/ /boot/\0" \
 -	"boot_scripts=boot.scr.uimg boot.scr\0" \
-+	"boot_scripts=boot-fit\0" \
++	"boot_scripts=boot-fit.scr\0" \
  	"boot_script_dhcp=boot.scr.uimg\0" \
  	BOOTENV_BOOT_TARGETS \
  	\
@@ -26,7 +26,7 @@ diff -aurN a/include/config_distro_bootcmd.h b/include/config_distro_bootcmd.h
 +	"boot_a_fit_script="                                              \
 +		"load ${devtype} ${devnum}:${distro_bootpart} "           \
 +			"${scriptaddr} ${prefix}${script}; "              \
-+		"source ${scriptaddr}:script@1\0"                         \
++		"source ${scriptaddr}:script-1\0"                         \
 +	\
  	"scan_dev_for_scripts="                                           \
 +		"echo Scanning ${devtype}${devnum}:${distro_bootpart}...; " \

@@ -1,27 +1,26 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 require recipes-bsp/u-boot/u-boot-netfield.inc
 
-DEPENDS_append += "u-boot-tools-native"
+DEPENDS:append = " u-boot-tools-native"
 
-DEPENDS_${PN}_remove += "rpi-u-boot-scr"
+DEPENDS:${PN}:remove = "rpi-u-boot-scr"
 
-SRC_URI_append += "file://netpi_defconfig \
-                   file://fat_show_files_without_arch_attr.patch \
-                   file://pxe_add_bootargs_append_func.patch \
+SRC_URI:append = " file://netpi_defconfig \
                    file://machine_config.h \
-                   file://Changed-config-file-from-machine-to-distro-specific-.patch \
-                   file://fix_console_handling.patch \
-                   "
+                   file://0003-add-support-for-FIT-script-boot.patch \
+                   file://Changed-config-file-from-machine-to-distro-specific-.patch"
+#                   file://pxe_add_bootargs_append_func.patch \
+#                   file://fix_console_handling.patch"
 
-SRC_URI_append += "file://disable_uart.patch"
+SRC_URI:append = " file://disable_uart.patch"
 
 UBOOT_MACHINE = "netpi_defconfig"
 
 RPI_BOOTIMAGE_NAME ?= "kernel7.img"
 
 #default device tree u-boot will use
-UBOOT_DEVICE_TREE="bcm2837-rpi-3-b"
+UBOOT_DEVICE_TREE = "bcm2837-rpi-3-b"
 
 inherit dts-sign
 #variables required to patch public key into dts
@@ -30,7 +29,7 @@ DTS_SIGN_KEY_DIR="${PLATFORM_KEYDIR}"
 DTS_SIGN_KEY_NAME="${PLATFORM_KEYNAME}"
 DTS_TO_SIGN="${S}/arch/arm/dts/${UBOOT_DEVICE_TREE}.dts"
 
-do_configure_prepend() {
+do_configure:prepend() {
     sed -i "s/CONFIG_DEFAULT_DEVICE_TREE=.*/CONFIG_DEFAULT_DEVICE_TREE=\"${UBOOT_DEVICE_TREE}\"/g" ${WORKDIR}/netpi_defconfig
     cp ${WORKDIR}/netpi_defconfig ${S}/configs/
 
@@ -40,14 +39,14 @@ do_configure_prepend() {
     cp ${WORKDIR}/machine_config.h ${S}/include/configs/
 }
 
-do_install_append() {
+do_install:append() {
     rm -r ${D}/boot/*
     install -m 0644 ${B}/u-boot.bin ${D}/boot/${RPI_BOOTIMAGE_NAME}
 }
 
 SIGNED_TREE = "${B}/arch/arm/dts/${UBOOT_DEVICE_TREE}.dtb"
 
-do_deploy_append() {
+do_deploy:append() {
     # Copy this device tree to deploy directory.
     # This tree contains the public key which is required in the signature verification step of the fitimage.
     mkdir -p ${DEPLOYDIR}/devicetree/
