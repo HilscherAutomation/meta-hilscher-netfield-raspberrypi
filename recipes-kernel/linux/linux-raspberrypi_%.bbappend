@@ -92,6 +92,13 @@ EOF
         done
 }
 
+do_kernel_configme:append() {
+    # Some 1.2 TPM modules are not supported on RPI, but included in meta-hilscher-netfield
+    # (e.g. ATMEL). Disabling it via fragment did not work, thus hardcode it here
+    sed -e 's/CONFIG_TCG_ATMEL=y/# CONFIG_TCG_ATMEL is not set/' \
+        -i ${B}/.config
+}
+
 do_deploy:append() {
         for DTB in ${RPI_KERNEL_DEVICETREE_OVERLAYS}; do
                 DTB=`normalize_dtb "${DTB}"`
