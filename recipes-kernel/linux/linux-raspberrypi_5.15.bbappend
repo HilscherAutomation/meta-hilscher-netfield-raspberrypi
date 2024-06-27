@@ -12,3 +12,7 @@ LINUX_VERSION="5.15.92"
 SRC_URI:append = " file://0001-Revert-cgroup-Disable-cgroup-memory-by-default.patch \
                    file://enable_debugfs.cfg \
                    file://enable_tcm.cfg"
+
+# Backport new regulatory database keys to allow loading new wireless-regdb
+SRC_URI:append = " file://0001-wifi-cfg80211-Add-my-certificate.patch \
+                   file://0002-wifi-cfg80211-fix-certs-build-to-not-depend-on-file-.patch"
