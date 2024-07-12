@@ -10,6 +10,8 @@ LINUX_VERSION="5.15.162"
 SRC_URI:append = " file://linux-5.15.92-to-162.patch.gz"
 addtask do_kernel_version_sanity_check after do_patch
 
+require cve-exclusions.inc
+
 SRC_URI:append = " file://0001-Revert-cgroup-Disable-cgroup-memory-by-default.patch \
                    file://enable_debugfs.cfg \
                    file://enable_tcm.cfg \
