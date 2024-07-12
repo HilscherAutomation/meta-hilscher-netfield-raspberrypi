@@ -9,7 +9,8 @@ DEPENDS:${PN}:remove = "rpi-u-boot-scr"
 SRC_URI:append = " file://netpi_defconfig \
                    file://machine_config.h \
                    file://0003-add-support-for-FIT-script-boot.patch \
-                   file://Changed-config-file-from-machine-to-distro-specific-.patch"
+                   file://Changed-config-file-from-machine-to-distro-specific-.patch \
+                   file://fix-boot-script-issues-related-to-unit-addressing.patch"
 #                   file://pxe_add_bootargs_append_func.patch \
 #                   file://fix_console_handling.patch"
 
