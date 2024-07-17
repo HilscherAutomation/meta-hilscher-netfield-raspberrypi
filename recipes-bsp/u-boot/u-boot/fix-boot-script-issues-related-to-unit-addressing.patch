@@ -1,0 +1,84 @@
+diff --git a/boot/image-fit-sig.c b/boot/image-fit-sig.c
+index 63e5423c92..d1345ca945 100644
+--- a/boot/image-fit-sig.c
++++ b/boot/image-fit-sig.c
+@@ -420,13 +420,20 @@ static int fit_config_verify_required_sigs(const void *fit, int conf_noffset,
+ 	bool reqd_policy_all = true;
+ 	const char *reqd_mode;
+ 
+-	/*
+-	 * We don't support this since libfdt considers names with the
+-	 * name root but different @ suffix to be equal
+-	 */
+-	if (strchr(name, '@')) {
+-		printf("Configuration node '%s' contains '@'\n", name);
+-		return -EPERM;
++	/* Skip the check/error if the name matches one of the following strings ... */
++	if ( (strcmp(name, "kernel@1")) &&
++		 (strcmp(name, "script@1")) &&
++		 (strcmp(name, "conf@1")) &&
++		 (strcmp(name, "hash@1")) &&
++		 (strcmp(name, "signature@1")) ) {
++		/*
++		* We don't support this since libfdt considers names with the
++		* name root but different @ suffix to be equal
++		*/
++		if (strchr(name, '@')) {
++			printf("Configuration node '%s' contains '@'\n", name);
++			return -EPERM;
++		}
+ 	}
+ 
+ 	/* Work out what we need to verify */
+diff --git a/boot/image-fit.c b/boot/image-fit.c
+index 33b4a46028..955966a163 100644
+--- a/boot/image-fit.c
++++ b/boot/image-fit.c
+@@ -1392,14 +1392,22 @@ int fit_image_verify(const void *fit, int image_noffset)
+ 	size_t		size;
+ 	char		*err_msg = "";
+ 
+-	if (IS_ENABLED(CONFIG_FIT_SIGNATURE) && strchr(name, '@')) {
+-		/*
+-		 * We don't support this since libfdt considers names with the
+-		 * name root but different @ suffix to be equal
+-		 */
+-		err_msg = "Node name contains @";
+-		goto err;
++	/* Skip the check/error if the name matches one of the following strings ... */
++	if ( (strcmp(name, "kernel@1")) &&
++		 (strcmp(name, "script@1")) &&
++		 (strcmp(name, "conf@1")) &&
++		 (strcmp(name, "hash@1")) &&
++		 (strcmp(name, "signature@1")) ) {
++		if (IS_ENABLED(CONFIG_FIT_SIGNATURE) && strchr(name, '@')) {
++			/*
++			* We don't support this since libfdt considers names with the
++			* name root but different @ suffix to be equal
++			*/
++			err_msg = "Node name contains @";
++			goto err;
++		}
+ 	}
++
+ 	/* Get image data and data length */
+ 	if (fit_image_get_data_and_size(fit, image_noffset, &data, &size)) {
+ 		err_msg = "Can't get image data/size";
+@@ -1604,8 +1612,15 @@ static int fdt_check_no_at(const void *fit, int parent)
+ 	int ret;
+ 
+ 	name = fdt_get_name(fit, parent, NULL);
+-	if (!name || strchr(name, '@'))
+-		return -EADDRNOTAVAIL;
++	/* Skip the check/error if the name matches one of the following strings ... */
++	if ( (strcmp(name, "kernel@1")) &&
++		 (strcmp(name, "script@1")) &&
++		 (strcmp(name, "conf@1")) &&
++		 (strcmp(name, "hash@1")) &&
++		 (strcmp(name, "signature@1")) ) {
++		if (!name || strchr(name, '@'))
++			return -EADDRNOTAVAIL;
++	}
+ 
+ 	fdt_for_each_subnode(node, fit, parent) {
+ 		ret = fdt_check_no_at(fit, node);
