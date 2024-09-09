@@ -9,6 +9,8 @@ do_fetch[vardeps] += "LINUX_BASEVERSION"
 SRC_URI:append = " file://enable_bluetooth.cfg"
 KERNEL_FEATURES:append = " features/bluetooth/bluetooth.scc"
 KERNEL_FEATURES:append = " features/media/media.scc features/media/media-usb-webcams.scc"
+# support for GPT
+KERNEL_FEATURES:append = " cfg/efi-ext.scc "
 
 UBOOT_RD_LOADADDRESS = "0x0A000000"
 UBOOT_RD_ENTRYPOINT  = "0x0A000000"
