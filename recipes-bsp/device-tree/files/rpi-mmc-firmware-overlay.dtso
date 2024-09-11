@@ -1,0 +1,16 @@
+/*
+ * Overlay for the Raspberry Pi mmc device - adds missing firmware reference.
+ */
+/dts-v1/;
+/plugin/;
+
+/ {
+	fragment@0 {
+		target-path = "/soc";
+		__overlay__ {
+			mmc@7e202000 {
+				firmware = <&firmware>;
+			};
+		};
+	};
+};
