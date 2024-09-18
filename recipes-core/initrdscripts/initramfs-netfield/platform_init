@@ -31,4 +31,38 @@ platform_init_run() {
 
 #	echo "Initializing the LED startup behavior ..."
 #	echo heartbeat > $(dirname $(readlink /var/platform/led_pg0))/trigger
+
+	mmcdev="/dev/mmcblk0"
+	if [ ! -b "${mmcdev}" ]; then
+		# NOTE: The old device tree (used in netFIELD-OS 2.4) does not provide a firmware reference
+		#       within the sdhost node. The latest kernel driver (netFIELD-OS 2.5) relies on this.
+		#       During an usb system recovery process the newer kernel may run with an old device tree (of the previous
+		#       system) which then leads to an compatibility conflict. As a result the driver will be deferred and the
+		#       system block device is missing. The fix is done in two steps:
+		#       1. the overlay provides the missing firmware reference
+		#       2. the reset of the usb interface triggers deferred probing
+
+		echo "Loading sdhost device tree overlay (firmware reference)..."
+		mount -t configfs none /sys/kernel/config
+		mkdir -p /sys/kernel/config/device-tree/overlays/mmc-firmware/
+		cat /boot/dt-overlays/rpi-mmc-firmware-overlay.dtbo > /sys/kernel/config/device-tree/overlays/mmc-firmware/dtbo
+
+		usbdev=$(blkid --label RECOVERY)
+		if [ -n "${usbdev}" ]; then
+			usbsyspath=$(udevadm info -q property --property="DEVPATH" $usbdev | cut -d "/" -f 2-8)
+			usbsyspath=$(dirname /sys/${usbsyspath})"/authorized"
+			echo 0 > ${usbsyspath}
+			echo 1 > ${usbsyspath}
+
+			echo "Waiting for usb recovery device ${usbdev}..."
+			while [ ! -b "${usbdev}" ]; do
+				sleep 1
+			done
+		fi
+
+		echo "Waiting for system block device ${mmcdev}..."
+		while [ ! -b "${mmcdev}" ]; do
+			sleep 1
+		done
+	fi
 }
