@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE:niot-e-tpi51-en-re = ".*"
 
 inherit devicetree
 
-S = "${WORKDIR}/"
+S = "${WORKDIR}"
 
 devicetree_do_install:append() {
 	default_dtb="${KERNEL_DEVICETREE}"
