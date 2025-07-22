@@ -115,3 +115,6 @@ do_deploy:append() {
                 done
         done
 }
+
+do_assemble_fitimage[depends] += " u-boot:do_deploy"
+do_assemble_fitimage_initramfs[depends] += " u-boot:do_deploy"
