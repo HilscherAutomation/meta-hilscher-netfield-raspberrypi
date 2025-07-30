@@ -63,8 +63,8 @@ FIT_SIGN_ALG = "rsa4096"
 RPI_USE_U_BOOT = "1"
 UBOOT_DTB_BINARY = ""
 UBOOT_SIGN_ENABLE = "1"
-UBOOT_SIGN_KEYDIR = "${KEYS_DIR}/boot/"
-UBOOT_SIGN_KEYNAME = "db"
+UBOOT_SIGN_KEYDIR ?= "${KEYS_DIR}/boot/"
+UBOOT_SIGN_KEYNAME ?= "${PLATFORM_KEYNAME}"
 UBOOT_MKIMAGE_DTCOPTS = "-I dts -O dtb -p 2000"
 
 #############################################################################
